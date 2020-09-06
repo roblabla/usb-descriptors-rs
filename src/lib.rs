@@ -88,7 +88,8 @@
 use bitflags::bitflags;
 use bitfield::bitfield;
 
-/// Combines descriptors into a single byte array provided by the user.
+/// Combines descriptors into a single byte array provided by the user. A null
+/// descriptor is added at the end (taking two bytes).
 ///
 /// This macro is semantically equivalent to a function with signature
 /// `const fn combine_descriptors(descriptors: &[Descriptor]) -> &[u8]`,
@@ -107,7 +108,7 @@ macro_rules! combine_descriptors {
         $crate::assert::assert_descriptor_list_valid(descriptors, 0);
 
         // Assert that $data is big enough.
-        let mut data = [0; 0 $(+ $descriptor.len())*];
+        let mut data = [0; 2 $(+ $descriptor.len())*];
         let mut offset_in_data = 0;
         $({
             $crate::to_arr!(arr, $descriptor);
